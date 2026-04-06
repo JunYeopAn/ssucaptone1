@@ -322,3 +322,6 @@ pip install numpy pandas matplotlib seaborn scikit-learn torch shap joblib
 ### 비고
 본 README의 참고 자료 목록은 최종보고서와 최종발표 자료에 포함된 문헌 및 데이터셋을 바탕으로 정리하였다.  
 GitHub 공개 시에는 위 항목들 중 실제로 프로젝트 수행에 직접 활용한 논문, 데이터셋, 보고서만 선별하여 최종 반영하는 것을 권장한다.
+
+## 🔗 캡스톤디자인2 링크
+https://github.com/kms0707/ssucaptone2
