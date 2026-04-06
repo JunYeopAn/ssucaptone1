@@ -245,3 +245,79 @@
 ### 예시 패키지 설치
 ```bash
 pip install numpy pandas matplotlib seaborn scikit-learn torch shap joblib
+
+---
+
+## 🚧 한계 및 향후 계획
+
+### 현재 한계
+
+본 프로젝트는 Flow 로그 기반 이상 탐지의 가능성을 확인하고, 서로 다른 탐지 관점을 가진 모델들의 성능을 비교하는 데 초점을 두었다.  
+다만 캡스톤디자인1 단계의 결과물인 만큼 다음과 같은 한계가 존재한다.
+
+- **단일 모델 접근의 한계**  
+  실험 결과, 공격 여부 탐지와 공격 유형 분류를 하나의 모델로 동시에 만족시키는 데에는 구조적인 한계가 있었다. 발표 자료에서도 탐지와 분류의 목적 차이, 희소한 공격 유형에 대한 분류 성능 저하 가능성이 주요 한계로 정리되었다.
+
+- **TCN의 연산 부담**  
+  TCN은 매우 높은 Precision, Recall, F1-score를 보였지만, 전체 네트워크 트래픽에 직접 적용할 경우 처리 부담이 커질 수 있다. 따라서 실시간 운영 환경에서 항상 단독으로 사용하기에는 효율성 측면의 검토가 필요하다.
+
+- **OCSVM의 분류 한계**  
+  OCSVM은 빠른 이상 탐지와 높은 Recall 측면에서는 강점을 보였지만, 공격 유형을 세부적으로 분류하는 데에는 한계가 있다. 즉, 1차 이상 여부 판별에는 적합하지만 다중 공격 유형 분류 모델로 사용하기에는 제약이 있다.
+
+- **실험 환경의 제한성**  
+  본 프로젝트의 실험은 공개 데이터셋 기반으로 수행되었기 때문에, 실제 기업망·클라우드·IoT 환경의 다양한 트래픽 패턴을 완전히 반영하지는 못한다. 따라서 운영 환경 일반화 성능은 추가 검증이 필요하다.
+
+- **서비스 통합의 미완성**  
+  보고서에서는 웹 대시보드, CLI, Collector, DB, AI 추론 구조까지 포함한 전체 시스템을 설계하였지만, 현재 결과물은 실험 중심의 모델 검증 단계에 가깝다. 실제 배포형 서비스 수준의 완전한 통합은 후속 개발이 필요하다.
+
+### 향후 계획
+
+최종발표 자료에서 제안한 방향에 따라, 이후에는 단순 모델 비교를 넘어 실제 적용 가능한 구조로 확장하는 것을 목표로 한다.
+
+- **하이브리드 구조 구현 및 검증**  
+  1단계에서 SVM/OCSVM 계열 모델로 정상·공격 여부를 빠르게 판별하고, 2단계에서 TCN으로 공격 유형을 세부 분류하는 하이브리드 구조를 실제로 구현하고 검증할 예정이다.
+
+- **데이터셋 확장 및 일반화 성능 평가**  
+  NF-UNSW-NB15-v3 외에도 CICIDS2017, CSE-CIC-IDS2018 등 다양한 Flow 기반 데이터셋을 활용하여 모델의 일반화 성능을 재검증할 예정이다.
+
+- **실제 환경 연동**  
+  Zeek / NetFlow 기반 Collector와 연동하여 실시간 Flow 수집-전처리-추론-시각화 파이프라인을 고도화하고, 웹 대시보드 및 로그 관리 기능과 연결하는 방향으로 발전시킬 계획이다.
+
+- **오탐 감소 및 임계값 최적화**  
+  운영 환경에서는 단순한 높은 Recall보다도 오탐(False Positive)을 줄이는 것이 중요하므로, threshold 최적화와 feature 개선을 통해 실사용성을 높일 예정이다.
+
+- **설명 가능한 AI(XAI) 고도화**  
+  현재 SHAP 기반 분석에서 MIN_TTL, MAX_TTL 등 주요 feature의 영향을 확인하였으므로, 후속 연구에서는 탐지 근거를 더 직관적으로 시각화하여 관리자 의사결정에 활용할 수 있도록 개선할 예정이다.
+
+---
+
+## 📚 참고 자료
+
+### 주요 참고 문헌
+- 네트워크 플로우 데이터 기반 이상징후 탐지 인공지능 모델 성능 비교
+- 머신러닝과 딥러닝을 활용한 악성 패킷 탐지 기술 연구
+- Machine learning-based network intrusion detection for big and imbalanced data using oversampling, stacking feature embedding and feature extraction
+- Impact of Machine Learning on Intrusion Detection Systems for the Protection of Critical Infrastructure
+- Evaluating machine learning-based intrusion detection systems with explainable AI: enhancing transparency and interpretability
+- Packet-Level and Flow-Level Network Intrusion Detection Based on Reinforcement Learning and Adversarial Training
+- Survey on Intrusion Detection Systems Based on Machine Learning Techniques for the Protection of Critical Infrastructure
+- Network Anomaly Detection: Flow-based or Packet-based Approach?
+- Flow-based intrusion detection: Techniques and challenges
+- Flow-Based and Packet-Based Intrusion Detection Using BLSTM
+- An Overview of IP Flow-Based Intrusion Detection
+- NetFlow Datasets for Machine Learning-based Network Intrusion Detection Systems
+- A flow-based IDS using Machine Learning in eBPF
+- A comprehensive review of AI based intrusion detection system
+
+### 데이터셋 및 관련 자료
+- NF-UNSW-NB15-v3
+- CICIDS2017
+- CSE-CIC-IDS2018
+- UNSW-NB15
+- AIT Netflow Dataset
+- UWF-ZeekData22 / UWF-ZeekDataFall22
+- CAIDA Dataset
+
+### 비고
+본 README의 참고 자료 목록은 최종보고서와 최종발표 자료에 포함된 문헌 및 데이터셋을 바탕으로 정리하였다.  
+GitHub 공개 시에는 위 항목들 중 실제로 프로젝트 수행에 직접 활용한 논문, 데이터셋, 보고서만 선별하여 최종 반영하는 것을 권장한다.
